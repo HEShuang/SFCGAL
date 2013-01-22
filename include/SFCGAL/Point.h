@@ -49,8 +49,8 @@ namespace SFCGAL {
 		 * Constructor from CGAL::Point_2<K>
 		 */
 		template < typename K >
-		Point( const CGAL::Point_2< K > & other ):
-			_coordinate(other)
+		Point( const CGAL::Point_2< K > & coordinate ):
+			_coordinate(new Coordinate(coordinate))
 		{
 
 		}
@@ -59,8 +59,8 @@ namespace SFCGAL {
 		 * Constructor from CGAL::Point_3<K>
 		 */
 		template < typename K >
-		Point( const CGAL::Point_3< K > & other ):
-			_coordinate(other)
+		Point( const CGAL::Point_3< K > & coordinate ):
+			_coordinate(new Coordinate(coordinate))
 		{
 
 		}
@@ -100,15 +100,15 @@ namespace SFCGAL {
 		/**
 		 * Returns the x value as a double (NaN for empty Point)
 		 */
-		inline Kernel::RT x() const { return _coordinate.x() ; }
+		inline Kernel::RT x() const { return _coordinate->x() ; }
 		/**
 		 * Returns the y value as a double (NaN for empty Point)
 		 */
-		inline Kernel::RT y() const { return _coordinate.y() ; }
+		inline Kernel::RT y() const { return _coordinate->y() ; }
 		/**
 		 * Returns the z value as a double (NaN for empty or 2d Point)
 		 */
-		inline Kernel::RT z() const { return _coordinate.z() ; }
+		inline Kernel::RT z() const { return _coordinate->z() ; }
 
 
 		/**
@@ -140,7 +140,7 @@ namespace SFCGAL {
 		 */
 		inline Kernel::Vector_2 toVector_2() const
 		{
-			return _coordinate.toVector_2();
+			return _coordinate->toVector_2();
 		}
 
 		/**
@@ -149,7 +149,7 @@ namespace SFCGAL {
 		 */
 		inline Kernel::Vector_3 toVector_3() const
 		{
-			return _coordinate.toVector_3();
+			return _coordinate->toVector_3();
 		}
 
 		/**
@@ -158,7 +158,7 @@ namespace SFCGAL {
 		 */
 		inline Kernel::Point_2 toPoint_2() const
 		{
-			return _coordinate.toPoint_2();
+			return _coordinate->toPoint_2();
 		}
 
 		/**
@@ -167,7 +167,7 @@ namespace SFCGAL {
 		 */
 		inline Kernel::Point_3 toPoint_3() const
 		{
-			return _coordinate.toPoint_3();
+			return _coordinate->toPoint_3();
 		}
 
 		/**
@@ -177,8 +177,8 @@ namespace SFCGAL {
 		template <int D>
 		typename TypeForDimension<D>::Point toPoint_d() const;
 
-		inline Coordinate &       coordinate() { return _coordinate; }
-		inline const Coordinate & coordinate() const { return _coordinate; }
+		inline Coordinate &       coordinate() { return *_coordinate; }
+		inline const Coordinate & coordinate() const { return *_coordinate; }
 
 		/**
 		 * Serializer
@@ -187,10 +187,10 @@ namespace SFCGAL {
 		void serialize( Archive& ar, const unsigned int version )
 		{
 			ar & boost::serialization::base_object<Geometry>(*this);
-			ar & _coordinate;
+			ar & (*_coordinate);
 		}
 	private:
-		Coordinate _coordinate ;
+		boost::shared_ptr< Coordinate > _coordinate ;
 		//add m here, keep coordinate as a spatial position that can be shared
 	};
 

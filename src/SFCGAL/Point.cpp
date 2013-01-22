@@ -11,7 +11,7 @@ namespace SFCGAL {
 ///
 Point::Point():
 	Geometry(),
-	_coordinate()
+	_coordinate( new Coordinate() )
 {
 }
 
@@ -19,7 +19,7 @@ Point::Point():
 ///
 ///
 Point::Point( const Coordinate & coordinate ):
-	_coordinate(coordinate)
+	_coordinate(new Coordinate(coordinate))
 {
 
 }
@@ -28,7 +28,7 @@ Point::Point( const Coordinate & coordinate ):
 ///
 ///
 Point::Point( const Kernel::FT & x, const Kernel::FT & y ):
-	_coordinate(x,y)
+	_coordinate(new Coordinate(x,y))
 {
 
 }
@@ -37,7 +37,7 @@ Point::Point( const Kernel::FT & x, const Kernel::FT & y ):
 ///
 ///
 Point::Point( const Kernel::FT & x, const Kernel::FT & y, const Kernel::FT & z ):
-	_coordinate(x,y,z)
+	_coordinate(new Coordinate(x,y,z))
 {
 
 }
@@ -47,7 +47,7 @@ Point::Point( const Kernel::FT & x, const Kernel::FT & y, const Kernel::FT & z )
 ///
 Point::Point( const double & x, const double & y, const double & z ):
 	Geometry(),
-	_coordinate(x,y,z)
+	_coordinate(new Coordinate(x,y,z))
 {
 
 }
@@ -118,7 +118,7 @@ int Point::dimension() const
 ///
 int Point::coordinateDimension() const
 {
-	return _coordinate.coordinateDimension() ;
+	return _coordinate->coordinateDimension() ;
 }
 
 
@@ -127,7 +127,7 @@ int Point::coordinateDimension() const
 ///
 bool Point::isEmpty() const
 {
-	return _coordinate.isEmpty() ;
+	return _coordinate->isEmpty() ;
 }
 
 ///
@@ -135,7 +135,7 @@ bool Point::isEmpty() const
 ///
 bool Point::is3D() const
 {
-	return _coordinate.is3D() ;
+	return _coordinate->is3D() ;
 }
 
 ///
@@ -159,7 +159,7 @@ void Point::accept( ConstGeometryVisitor & visitor ) const
 ///
 bool Point::operator < ( const Point & other ) const
 {
-	return _coordinate < other._coordinate ;
+	return (*_coordinate) < (*other._coordinate) ;
 }
 
 ///
@@ -167,7 +167,8 @@ bool Point::operator < ( const Point & other ) const
 ///
 bool Point::operator == ( const Point & other ) const
 {
-	return _coordinate == other._coordinate ;
+	return _coordinate == other._coordinate
+	     || ( *_coordinate ) == ( * other._coordinate ) ;
 }
 
 ///
@@ -175,7 +176,8 @@ bool Point::operator == ( const Point & other ) const
 ///
 bool Point::operator != ( const Point & other ) const
 {
-	return _coordinate != other._coordinate ;
+	return _coordinate != other._coordinate
+	     && ( *_coordinate ) != ( * other._coordinate ) ;
 }
 
 
