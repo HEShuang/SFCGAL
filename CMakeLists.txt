@@ -12,8 +12,21 @@ set( SFCGAL_VERSION_PATCH 0 )
 
 set( SFCGAL_VERSION "${SFCGAL_VERSION_MAJOR}.${SFCGAL_VERSION_MINOR}.${SFCGAL_VERSION_PATCH}" )
 
+#-----------------------------------------------------------
+# build options
+#-----------------------------------------------------------
 include( PrecompiledHeader )
 option( Use_precompiled_headers "Use precompiled headers" OFF )
+
+#note : not available on windows without export/import
+OPTION( SFCGAL_USE_STATIC_LIBS "define if SFCGAL is build as a static library" ON )
+
+option( SFCGAL_BUILD_EXAMPLES "build examples" OFF )
+option( SFCGAL_BUILD_OSG "build SFCGAL with OpenSceneGraph support (outputs in 3D formats)" OFF )
+option( SFCGAL_BUILD_TOOLS "build tools" OFF )
+option( SFCGAL_BUILD_VIEWER "build viewer (requires OSG and Qt)" OFF )
+option( SFCGAL_BUILD_BENCH "Build benchmarks" OFF )
+option( SFCGAL_BUILD_TEST "Build tests" OFF )
 
 #-----------------------------------------------------------
 # dependencies
@@ -41,7 +54,29 @@ if( ${Boost_USE_MULTITHREAD} )
 else()
 	message( STATUS "Boost_USE_MULTITHREAD=OFF" )
 endif()
-find_package( Boost COMPONENTS chrono program_options unit_test_framework filesystem date_time system thread serialization timer REQUIRED )
+
+#-- list boost required components
+set( SFCGAL_Boost_COMPONENTS "" )
+if ( SFCGAL_BUILD_BENCH OR SFCGAL_BUILD_TEST )
+	list( APPEND SFCGAL_Boost_COMPONENTS	
+		unit_test_framework
+	)
+endif()
+if ( SFCGAL_BUILD_EXAMPLES )
+	list( APPEND SFCGAL_Boost_COMPONENTS	
+		chrono 
+		program_options 
+		filesystem 
+		date_time
+	)
+endif()
+list( APPEND SFCGAL_Boost_COMPONENTS
+	system
+	thread 
+	serialization 
+	timer
+)
+find_package( Boost COMPONENTS ${SFCGAL_Boost_COMPONENTS} REQUIRED )
 
 
 #-- GMP (facultative)  -------------------------------------
@@ -94,7 +129,6 @@ link_directories(
 )
 
 #-- optional OpenSceneGraph support
-option( SFCGAL_BUILD_OSG "build SFCGAL with OpenSceneGraph support (outputs in 3D formats)" OFF )
 if ( SFCGAL_BUILD_OSG )
 	find_package( OpenSceneGraph COMPONENTS osgDB osgUtil REQUIRED )
 	include_directories( ${OPENSCENEGRAPH_INCLUDE_DIRS} ) 
@@ -128,10 +162,6 @@ configure_file( ${CMAKE_SOURCE_DIR}/include/SFCGAL/config.h.cmake ${CMAKE_SOURCE
 configure_file( ${CMAKE_SOURCE_DIR}/include/SFCGAL/version.h.cmake ${CMAKE_SOURCE_DIR}/include/SFCGAL/version.h )
 
 
-#note : not available on windows without export/import
-OPTION( SFCGAL_USE_STATIC_LIBS "define if SFCGAL is build as a static library" ON )
-
-
 #-- build the library
 add_subdirectory( src )
 
@@ -139,20 +169,17 @@ add_subdirectory( src )
 add_subdirectory( test )
 
 #-- build examples
-option( SFCGAL_BUILD_EXAMPLES "build examples" OFF )
-if( ${SFCGAL_BUILD_EXAMPLES} )
+if( SFCGAL_BUILD_EXAMPLES )
 	add_subdirectory( example )
 endif()
 
 #-- build tools
-option( SFCGAL_BUILD_TOOLS "build tools" ON )
-if( ${SFCGAL_BUILD_TOOLS} )
+if( SFCGAL_BUILD_TOOLS )
 	add_subdirectory( tools )
 endif()
 
 #-- viewer 
-option( SFCGAL_BUILD_VIEWER "build viewer" OFF )
-if( ${SFCGAL_BUILD_VIEWER} )
+if( SFCGAL_BUILD_VIEWER )
 	if ( NOT SFCGAL_BUILD_OSG )
 		message( FATAL_ERROR "can't build viewer without OSG support (set SFCGAL_BUILD_OSG to ON)" )
 	endif()
