@@ -206,15 +206,15 @@ bool  Point::isMeasured() const
 ///
 ///
 ///
-bool  Point::isShared() const
+bool  Point::hasSharedCoordinate() const
 {
-	return _coordinate.use_count() != 0 ;
+	return _coordinate.use_count() <= 1 ;
 }
 
 ///
 ///
 ///
-Point& Point::unshare()
+Point& Point::unsharedCoordinate()
 {
 	_coordinate.reset( new Coordinate( *_coordinate ) );
 	return *this ;
