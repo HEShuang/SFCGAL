@@ -61,10 +61,11 @@ std::auto_ptr< Polygon > hoch( const unsigned int & order )
 
 	std::auto_ptr< Polygon > result( new Polygon() ) ;
 	std::auto_ptr< LineString > ring( new LineString() ) ;
+	ring->reserve( points.size() + 1 ) ;
 	for ( std::vector< Kernel::Vector_2 >::const_iterator it = points.begin(); it != points.end(); ++it ){
 		ring->addPoint( new Point( it->x(), it->y() ) ) ;
 	}
-	ring->addPoint( new Point( points.front().x(), points.front().y() ) ) ;
+	ring->addPoint( ring->startPoint() ) ;
 
 	result->setExteriorRing( ring.release() );
 

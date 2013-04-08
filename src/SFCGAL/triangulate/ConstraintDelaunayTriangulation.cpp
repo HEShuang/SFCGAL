@@ -42,7 +42,7 @@ ConstraintDelaunayTriangulation::ConstraintDelaunayTriangulation():
 ///
 ///
 ///
-ConstraintDelaunayTriangulation::Vertex_handle ConstraintDelaunayTriangulation::addVertex( const Coordinate & position )
+ConstraintDelaunayTriangulation::Vertex_handle ConstraintDelaunayTriangulation::addVertex( const Point & position )
 {
 	if ( position.isEmpty() ){
 		BOOST_THROW_EXCEPTION(Exception(
@@ -135,14 +135,15 @@ void ConstraintDelaunayTriangulation::markDomains()
 void ConstraintDelaunayTriangulation::getTriangles( TriangulatedSurface & triangulatedSurface, bool filterExteriorParts ) const
 {
 	triangulatedSurface.reserve( triangulatedSurface.numTriangles() + numTriangles() );
+
 	for ( Finite_faces_iterator it = finite_faces_begin(); it != finite_faces_end(); ++it )
 	{
 		if ( filterExteriorParts && ( it->info().nestingLevel % 2 == 0 ) ){
 			continue ;
 		}
-		const Coordinate & a = it->vertex(0)->info().original ;
-		const Coordinate & b = it->vertex(1)->info().original ;
-		const Coordinate & c = it->vertex(2)->info().original ;
+		const Point & a = it->vertex(0)->info().original ;
+		const Point & b = it->vertex(1)->info().original ;
+		const Point & c = it->vertex(2)->info().original ;
 
 		// check that vertex has an original vertex
 		if ( a.isEmpty() || b.isEmpty() || c.isEmpty() ){
