@@ -33,6 +33,10 @@ namespace SFCGAL {
 	/**
 	 * A point in SFA.
 	 *
+	 * Points share coordinates. In order to share coordinate with an other point,
+	 * use assign operator or construct it from the other point. In order to remove the coordinate sharing,
+	 * use Point::unshare() (a copy of the coordinate instance will be performed)
+	 *
 	 * The x(),y(),z() interface is based on CGAL kernel requirements, taken
 	 * from examples/Kernel_23/MyPointC2.h
 
@@ -48,6 +52,10 @@ namespace SFCGAL {
 		 * Constructor with Coordinate
 		 */
 		Point( const Coordinate & coordinate ) ;
+		/**
+		 * Constructor with SharedCoordinate
+		 */
+		Point( SharedCoordinate coordinate ) ;
 		/**
 		 * XY Constructor with exact coordinates
 		 */
@@ -106,15 +114,15 @@ namespace SFCGAL {
 		/**
 		 * Returns the x value as a double (NaN for empty Point)
 		 */
-		inline Kernel::RT x() const { return _coordinate.x() ; }
+		inline Kernel::RT x() const { return _coordinate->x() ; }
 		/**
 		 * Returns the y value as a double (NaN for empty Point)
 		 */
-		inline Kernel::RT y() const { return _coordinate.y() ; }
+		inline Kernel::RT y() const { return _coordinate->y() ; }
 		/**
 		 * Returns the z value
 		 */
-		inline Kernel::RT z() const { return _coordinate.z() ; }
+		inline Kernel::RT z() const { return _coordinate->z() ; }
 
 		/**
 		 * Returns the m value (NaN is not defined)
@@ -124,6 +132,17 @@ namespace SFCGAL {
 		 * Sets the m value
 		 */
 		inline void      setM( const double & m ) { _m = m ; }
+
+
+		/**
+		 * @brief Tests if the coordinate of the point is shared with other Points
+		 * @warning For Debug and Test purpose, relies on shared_ptr< T >::use_count()
+		 */
+		bool  isShared() const ;
+		/**
+		 * @brief [SharedCoordinate]Release coordinate sharing and returns this
+		 */
+		Point& unshare() ;
 
 
 		/**
@@ -154,7 +173,7 @@ namespace SFCGAL {
 		 */
 		inline Kernel::Vector_2 toVector_2() const
 		{
-			return _coordinate.toVector_2();
+			return _coordinate->toVector_2();
 		}
 
 		/**
@@ -162,7 +181,7 @@ namespace SFCGAL {
 		 */
 		inline Kernel::Vector_3 toVector_3() const
 		{
-			return _coordinate.toVector_3();
+			return _coordinate->toVector_3();
 		}
 
 		/**
@@ -170,7 +189,7 @@ namespace SFCGAL {
 		 */
 		inline Kernel::Point_2 toPoint_2() const
 		{
-			return _coordinate.toPoint_2();
+			return _coordinate->toPoint_2();
 		}
 
 		/**
@@ -178,7 +197,7 @@ namespace SFCGAL {
 		 */
 		inline Kernel::Point_3 toPoint_3() const
 		{
-			return _coordinate.toPoint_3();
+			return _coordinate->toPoint_3();
 		}
 
 		/**
@@ -187,8 +206,8 @@ namespace SFCGAL {
 		template <int D>
 		typename TypeForDimension<D>::Point toPoint_d() const;
 
-		inline Coordinate &       coordinate() { return _coordinate; }
-		inline const Coordinate & coordinate() const { return _coordinate; }
+		inline Coordinate &       coordinate() { return *_coordinate; }
+		inline const Coordinate & coordinate() const { return *_coordinate; }
 
 		/**
 		 * Serializer
@@ -197,10 +216,13 @@ namespace SFCGAL {
 		void serialize( Archive& ar, const unsigned int version )
 		{
 			ar & boost::serialization::base_object<Geometry>(*this);
-			ar & _coordinate;
+			ar & (*_coordinate);
 		}
 	private:
-		Coordinate _coordinate ;
+		/**
+		 * @brief shared pointer on coordinate (never NULL)
+		 */
+		SharedCoordinate _coordinate ;
 		/**
 		 * @brief m coordinates (NaN if not defined)
 		 */

@@ -31,7 +31,7 @@ namespace SFCGAL {
 ///
 Point::Point():
 	Geometry(),
-	_coordinate(),
+	_coordinate(new Coordinate()),
 	_m(NaN())
 {
 }
@@ -40,6 +40,16 @@ Point::Point():
 ///
 ///
 Point::Point( const Coordinate & coordinate ):
+	_coordinate(new Coordinate(coordinate)),
+	_m(NaN())
+{
+
+}
+
+///
+///
+///
+Point::Point( SharedCoordinate coordinate ):
 	_coordinate(coordinate),
 	_m(NaN())
 {
@@ -50,7 +60,7 @@ Point::Point( const Coordinate & coordinate ):
 ///
 ///
 Point::Point( const Kernel::FT & x, const Kernel::FT & y ):
-	_coordinate(x,y),
+	_coordinate(new Coordinate(x,y)),
 	_m(NaN())
 {
 
@@ -60,7 +70,7 @@ Point::Point( const Kernel::FT & x, const Kernel::FT & y ):
 ///
 ///
 Point::Point( const Kernel::FT & x, const Kernel::FT & y, const Kernel::FT & z ):
-	_coordinate(x,y,z),
+	_coordinate(new Coordinate(x,y,z)),
 	_m(NaN())
 {
 
@@ -71,7 +81,7 @@ Point::Point( const Kernel::FT & x, const Kernel::FT & y, const Kernel::FT & z )
 ///
 Point::Point( const double & x, const double & y, const double & z ):
 	Geometry(),
-	_coordinate(x,y,z),
+	_coordinate(new Coordinate(x,y,z)),
 	_m(NaN())
 {
 
@@ -81,7 +91,7 @@ Point::Point( const double & x, const double & y, const double & z ):
 ///
 ///
 Point::Point( const Kernel::Point_2 & other ):
-	_coordinate(other),
+	_coordinate(new Coordinate(other)),
 	_m(NaN())
 {
 
@@ -91,7 +101,7 @@ Point::Point( const Kernel::Point_2 & other ):
 ///
 ///
 Point::Point( const Kernel::Point_3 & other ):
-	_coordinate(other),
+	_coordinate(new Coordinate(other)),
 	_m(NaN())
 {
 
@@ -165,7 +175,7 @@ int Point::dimension() const
 ///
 int Point::coordinateDimension() const
 {
-	return _coordinate.coordinateDimension() + isMeasured() ? 1 : 0 ;
+	return _coordinate->coordinateDimension() + isMeasured() ? 1 : 0 ;
 }
 
 
@@ -174,7 +184,7 @@ int Point::coordinateDimension() const
 ///
 bool Point::isEmpty() const
 {
-	return _coordinate.isEmpty() ;
+	return _coordinate->isEmpty() ;
 }
 
 ///
@@ -182,7 +192,7 @@ bool Point::isEmpty() const
 ///
 bool Point::is3D() const
 {
-	return _coordinate.is3D() ;
+	return _coordinate->is3D() ;
 }
 
 ///
@@ -191,6 +201,23 @@ bool Point::is3D() const
 bool  Point::isMeasured() const
 {
 	return ! isNaN(_m) ;
+}
+
+///
+///
+///
+bool  Point::isShared() const
+{
+	return _coordinate.use_count() != 0 ;
+}
+
+///
+///
+///
+Point& Point::unshare()
+{
+	_coordinate.reset( new Coordinate( *_coordinate ) );
+	return *this ;
 }
 
 ///
@@ -214,7 +241,7 @@ void Point::accept( ConstGeometryVisitor & visitor ) const
 ///
 bool Point::operator < ( const Point & other ) const
 {
-	return _coordinate < other._coordinate ;
+	return (*_coordinate) < (*other._coordinate) ;
 }
 
 ///
@@ -222,7 +249,7 @@ bool Point::operator < ( const Point & other ) const
 ///
 bool Point::operator == ( const Point & other ) const
 {
-	return _coordinate == other._coordinate ;
+	return ( _coordinate == other._coordinate ) || ( (*_coordinate) == (*other._coordinate) ) ;
 }
 
 ///
@@ -230,7 +257,7 @@ bool Point::operator == ( const Point & other ) const
 ///
 bool Point::operator != ( const Point & other ) const
 {
-	return _coordinate != other._coordinate ;
+	return ( _coordinate != other._coordinate ) && ( (*_coordinate) != (*other._coordinate) ) ;
 }
 
 
