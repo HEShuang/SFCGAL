@@ -23,7 +23,7 @@
 
 #include <boost/optional.hpp>
 
-#include <SFCGAL/Coordinate.h>
+#include <SFCGAL/Point.h>
 
 #include <CGAL/Constrained_Delaunay_triangulation_2.h>
 #include <CGAL/Triangulation_vertex_base_with_info_2.h>
@@ -50,7 +50,7 @@ namespace triangulate {
 				original()
 			{
 			}
-			Coordinate original ;
+			Point original ;
 		};
 
 		/**
@@ -89,7 +89,7 @@ namespace triangulate {
 		/**
 		 * @brief add a vertex to the triangulation
 		 */
-		Vertex_handle addVertex( const Coordinate & position ) ;
+		Vertex_handle addVertex( const Point & position ) ;
 		/**
 		 * @brief add a vertex to the triangulation
 		 */
