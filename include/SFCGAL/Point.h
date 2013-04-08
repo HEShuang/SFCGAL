@@ -138,11 +138,11 @@ namespace SFCGAL {
 		 * @brief Tests if the coordinate of the point is shared with other Points
 		 * @warning For Debug and Test purpose, relies on shared_ptr< T >::use_count()
 		 */
-		bool  isShared() const ;
+		bool  hasSharedCoordinate() const ;
 		/**
 		 * @brief [SharedCoordinate]Release coordinate sharing and returns this
 		 */
-		Point& unshare() ;
+		Point& unsharedCoordinate() ;
 
 
 		/**
