@@ -25,7 +25,7 @@
 
 #include <SFCGAL/Geometry.h>
 #include <SFCGAL/PreparedGeometry.h>
-
+#include <SFCGAL/SharedCoordinateFactory.h>
 #include <SFCGAL/tools/InputStreamReader.h>
 
 namespace SFCGAL {
@@ -151,6 +151,8 @@ namespace io {
 		 */
 		bool _isMeasured ;
 
+
+		SharedCoordinateFactory _sharedCoordinateFactory ;
 
 		/**
 		 * returns default parse error message
