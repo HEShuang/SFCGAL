@@ -7,14 +7,11 @@ namespace SFCGAL {
 ///
 SharedCoordinate SharedCoordinateFactory::makeSharedCoordinate( const Coordinate & c )
 {
+	typedef std::set< SharedCoordinate, detail::LessSharedPtr >::iterator iterator ;
+
 	SharedCoordinate sc( new Coordinate( c ) );
-	std::map< Coordinate, SharedCoordinate >::iterator it = _coordinates.find( *sc ) ;
-	if ( it != _coordinates.end() ){
-		return it->second ;
-	}else{
-		_coordinates.insert( std::make_pair( *sc, sc ) );
-		return sc ;
-	}
+	std::pair< iterator, bool > result = _coordinates.insert( sc );
+	return *result.first ;
 }
 
 

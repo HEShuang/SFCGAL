@@ -21,11 +21,13 @@
 #ifndef _SFCGAL_SHAREDCOORDINATEFACTORY_H_
 #define _SFCGAL_SHAREDCOORDINATEFACTORY_H_
 
-#include <map>
+#include <set>
 
 #include <SFCGAL/Coordinate.h>
 #include <SFCGAL/Kernel.h>
 #include <SFCGAL/Geometry.h>
+
+#include <SFCGAL/detail/LessSharedPtr.h>
 
 namespace SFCGAL {
 
@@ -59,7 +61,7 @@ namespace SFCGAL {
 		void clear() ;
 
 	private:
-		std::map< Coordinate, SharedCoordinate > _coordinates ;
+		std::set< SharedCoordinate, detail::LessSharedPtr > _coordinates ;
 	};
 
 } // namespace SFCGAL
