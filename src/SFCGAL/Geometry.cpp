@@ -30,6 +30,7 @@
 #include <SFCGAL/algorithm/distance3d.h>
 
 #include <SFCGAL/detail/EnvelopeVisitor.h>
+#include <SFCGAL/detail/GetCoordinatesVisitor.h>
 
 #include <SFCGAL/transform/RoundTransform.h>
 
@@ -160,7 +161,7 @@ double Geometry::distance3D( const Geometry & other ) const
 void Geometry::round( const long & scale )
 {
 	transform::RoundTransform roundTransform( scale );
-	accept( roundTransform ) ;
+	transform( roundTransform ) ;
 }
 
 ///
@@ -187,6 +188,19 @@ Geometry &  Geometry::geometryN( size_t const& n )
 {
 	BOOST_ASSERT( n == 0 );
 	return *this ;
+}
+
+///
+///
+///
+void Geometry::transform( Transform & t )
+{
+	std::set< SharedCoordinate > coordinates ;
+	detail::GetCoordinatesVisitor visitor( coordinates );
+	accept(visitor);
+	for ( std::set< SharedCoordinate >::iterator it = coordinates.begin(); it != coordinates.end(); ++it ){
+		t.transform( **it ) ;
+	}
 }
 
 

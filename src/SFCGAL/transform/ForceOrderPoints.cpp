@@ -39,7 +39,7 @@ ForceOrderPoints::ForceOrderPoints( bool orientCCW ) :
 ///
 ///
 ///
-void ForceOrderPoints::transform( Point & p )
+void ForceOrderPoints::visit( Point & p )
 {
 }
 
@@ -61,7 +61,7 @@ void ForceOrderPoints::visit( Triangle & t )
 				t.reverse();
 			}
 		}
-		Transform::visit( t );
+		PointVisitor::visit( t );
 	}
 	
 }
@@ -95,7 +95,7 @@ void ForceOrderPoints::visit( Polygon& p )
 				}
 			}
 		}
-		Transform::visit( p );
+		PointVisitor::visit( p );
 	}
 	
 }

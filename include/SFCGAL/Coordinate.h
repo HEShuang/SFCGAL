@@ -225,11 +225,6 @@ namespace SFCGAL {
 	};
 
 
-	/**
-	 * @brief shared_ptr on Coordinate
-	 */
-	typedef boost::shared_ptr< Coordinate > SharedCoordinate ;
-
 }//SFCGAL
 
 #endif

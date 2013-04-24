@@ -125,6 +125,36 @@ bool Envelope::is3D() const
 ///
 ///
 ///
+std::string Envelope::asText( const int & numDecimals ) const
+{
+	if ( isEmpty() ){
+		return "";
+	}
+
+	std::ostringstream oss;
+	if ( numDecimals >= 0 ){
+		oss << std::fixed ;
+		oss.precision( numDecimals );
+	}
+
+	if ( is3D() ){
+		oss << "BOX3D(" ;
+		oss << _bounds[0].lower() << " " << _bounds[1].lower() << " " << _bounds[2].lower() << "," ;
+		oss << _bounds[0].upper() << " " << _bounds[1].upper() << " " << _bounds[2].upper() ;
+		oss << ")";
+	}else{
+		oss << "BOX(" ;
+		oss << _bounds[0].lower() << " " << _bounds[1].lower() << "," ;
+		oss << _bounds[0].upper() << " " << _bounds[1].upper() ;
+		oss << ")";
+	}
+
+	return oss.str();
+}
+
+///
+///
+///
 void Envelope::expandToInclude( const Coordinate & coordinate )
 {
 	if ( ! coordinate.isEmpty() ){

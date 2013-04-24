@@ -39,7 +39,7 @@ ForceZOrderPoints::ForceZOrderPoints( const Kernel::FT & defaultZ ):
 ///
 ///
 ///
-void ForceZOrderPoints::transform( Point & p )
+void ForceZOrderPoints::visit( Point & p )
 {
 	if ( ! p.is3D() ) {
 		p = Point( p.x(), p.y(), _defaultZ );
@@ -57,7 +57,7 @@ void ForceZOrderPoints::visit( Triangle & t )
 			// not pointing up, reverse
 			t.reverse();
 		}
-		Transform::visit( t );
+		PointVisitor::visit( t );
 	}
 	
 }
@@ -77,7 +77,7 @@ void ForceZOrderPoints::visit( Polygon& p )
 				inter.reverse();
 			}
 		}
-		Transform::visit( p );
+		PointVisitor::visit( p );
 	}
 	
 }

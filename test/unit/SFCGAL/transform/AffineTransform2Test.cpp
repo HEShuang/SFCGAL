@@ -39,12 +39,30 @@ BOOST_AUTO_TEST_CASE( simpleTranslate )
 	);
 
 	transform::AffineTransform2< Kernel > transform( affine ) ;
-	g.accept(transform );
+	g.transform(transform );
 
 	BOOST_CHECK_EQUAL( g.pointN(0).asText(5), "POINT(1.00000 2.00000)" );
 	BOOST_CHECK_EQUAL( g.pointN(1).asText(5), "POINT(2.00000 3.00000)" );
 }
 
+BOOST_AUTO_TEST_CASE( simpleTranslateOnSharedCoordinates )
+{
+	LineString ring ;
+	ring.addPoint( Point(0,0) );
+	ring.addPoint( Point(1,0) );
+	ring.addPoint( Point(1,1) );
+	// close ring and share first point
+	ring.addPoint( ring.startPoint() );
+
+	CGAL::Aff_transformation_2< Kernel > affine(
+			CGAL::TRANSLATION,
+			CGAL::Vector_2< Kernel >( 1.0,2.0 )
+	);
+	transform::AffineTransform2< Kernel > transform(affine) ;
+	ring.transform( transform ) ;
+	BOOST_CHECK_EQUAL( ring.startPoint().sharedCoordinate().get(), ring.endPoint().sharedCoordinate().get() );
+	BOOST_CHECK_EQUAL( ring.asText(0), "LINESTRING(1 2,2 2,2 3,1 2)" );
+}
 
 
 BOOST_AUTO_TEST_SUITE_END()

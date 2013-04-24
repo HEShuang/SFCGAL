@@ -34,6 +34,9 @@ namespace CGAL {
 }
 
 namespace SFCGAL {
+	class Coordinate ;
+	class Envelope ;
+
 	class Geometry ;
     class Point ;
     class LineString ;
@@ -54,10 +57,14 @@ namespace SFCGAL {
     //not SFA, appears in GML/CityGML
     class Grid ;
 
-    class Envelope ;
-
+    class Transform ;
     class GeometryVisitor ;
     class ConstGeometryVisitor ;
+
+    /**
+	 * @brief shared_ptr on Coordinate
+	 */
+	typedef boost::shared_ptr< Coordinate > SharedCoordinate ;
 }
 
 namespace SFCGAL {
@@ -166,7 +173,7 @@ namespace SFCGAL {
 
        /**
         * [OGC/SFA]returns the WKT string
-        * @numDecimals extension specify fix precision output
+        * @param numDecimals extension specify fix precision output
         */
        std::string          asText( const int & numDecimals = -1 ) const ;
 
@@ -250,6 +257,11 @@ namespace SFCGAL {
             BOOST_ASSERT( is< Derived >() );
             return *static_cast< Derived * >( this );
        }
+
+       /**
+        * @brief Apply a coordinate transform
+        */
+       void transform( Transform & transform ) ;
 
        /**
         * @brief [visitor]dispatch visitor

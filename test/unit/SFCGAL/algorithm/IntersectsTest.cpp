@@ -375,35 +375,35 @@ BOOST_AUTO_TEST_CASE( intersects3DSolid )
 
 	// intersection with another solid
 	{
-		Solid solidb = solid;
-		Solid solidc = solid;
-		Solid solidd = solid;
+		std::auto_ptr<Geometry> solidb( io::readWkt( gstr ));
+		std::auto_ptr<Geometry> solidc( io::readWkt( gstr ));
+		std::auto_ptr<Geometry> solidd( io::readWkt( gstr ));
 
 		CGAL::Vector_3<Kernel> tv( CGAL::Point_3<Kernel>( 0.0, 0.0, 0.0 ),
 					   CGAL::Point_3<Kernel>( 2.0, 0.0, 0.0 ));
 		transform::AffineTransform3<Kernel> t( CGAL::Aff_transformation_3<Kernel>( CGAL::Translation(),
 											   tv ));
 		// translate the solid
-		t.transform( solidb );
+		solidb->transform( t );
 		
 		CGAL::Vector_3<Kernel> tv2( CGAL::Point_3<Kernel>( 0.0, 0.0, 0.0 ),
 					    CGAL::Point_3<Kernel>( 1.0, 0.0, 0.0 ));
 		transform::AffineTransform3<Kernel> t2( CGAL::Aff_transformation_3<Kernel>( CGAL::Translation(),
 											    tv2 ));
-		t2.transform( solidc );
+		solidc->transform( t2 );
 
 		CGAL::Vector_3<Kernel> tv3( CGAL::Point_3<Kernel>( 0.0, 0.0, 0.0 ),
 					    CGAL::Point_3<Kernel>( 0.5, 0.0, 0.0 ));
 		transform::AffineTransform3<Kernel> t3( CGAL::Aff_transformation_3<Kernel>( CGAL::Translation(),
 											    tv3 ));
-		t2.transform( solidd );
+		solidd->transform( t2 );
 
 		// a non-overlapping solid
-		BOOST_CHECK_EQUAL( algorithm::intersects3D( solidb, solid ), false );
+		BOOST_CHECK_EQUAL( algorithm::intersects3D( *solidb, solid ), false );
 		// a touching solid (on the edge)
-		BOOST_CHECK_EQUAL( algorithm::intersects3D( solidc, solid ), true );
+		BOOST_CHECK_EQUAL( algorithm::intersects3D( *solidc, solid ), true );
 		// an overlapping solid
-		BOOST_CHECK_EQUAL( algorithm::intersects3D( solidd, solid ), true );
+		BOOST_CHECK_EQUAL( algorithm::intersects3D( *solidd, solid ), true );
 	}
 }
 

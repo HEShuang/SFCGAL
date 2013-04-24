@@ -69,7 +69,7 @@ namespace algorithm {
 			Geometry* gi = coll.geometryN(i).clone();
 			if ( force3d && !gi->is3D() ) {
 				transform::ForceZ forceZ;
-				gi->accept( forceZ );
+				gi->transform( forceZ );
 			}
 			switch ( gi->geometryTypeId() )
 			{

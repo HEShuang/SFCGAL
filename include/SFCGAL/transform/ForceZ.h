@@ -40,7 +40,7 @@ namespace transform {
 		/*
 		 * [SFCGAL::Transform]
 		 */
-		virtual void transform( Point & p ) ;
+		virtual void transform( Coordinate & c ) ;
 
 	private:
 		Kernel::FT _defaultZ ;

@@ -18,46 +18,38 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-#ifndef _SFCGAL_TRANSFORM_AFFINETRANSFORM3_H_
-#define _SFCGAL_TRANSFORM_AFFINETRANSFORM3_H_
+#ifndef _SFCGAL_DETAIL_GETCOORDINATESVISITOR_H_
+#define _SFCGAL_DETAIL_GETCOORDINATESVISITOR_H_
 
-#include <CGAL/Aff_transformation_3.h>
-#include <SFCGAL/Transform.h>
+#include <set>
+
+#include <SFCGAL/PointVisitor.h>
 
 namespace SFCGAL {
-namespace transform {
+namespace detail {
 
 	/**
-	 * Wrapper for CGAL::Aff_transform_3
+	 * Get coordinates in geometries
 	 */
-	template < typename K >
-	class AffineTransform3 : public Transform {
+	class GetCoordinatesVisitor : public PointVisitor {
 	public:
 		/**
-		 * Constructor with a transform
+		 * @brief constructor with in/out coordinates
+		 * @warning reference is stored in GetCoordinatesVisitor
 		 */
-		AffineTransform3( CGAL::Aff_transformation_3< Kernel > transform ):
-			_transform(transform)
-		{
+		GetCoordinatesVisitor( std::set< SharedCoordinate > & coordinates ) ;
 
-		}
-
-		/*
-		 * [SFCGAL::Transform]
+		/**
+		 * @brief visit a point
 		 */
-		virtual void transform( Coordinate & c )
-		{
-			c = Coordinate( c.toPoint_3().transform( _transform ) ) ;
-		}
+		virtual void visit( Point & g ) ;
 
 	private:
-		CGAL::Aff_transformation_3< K > _transform ;
+		std::set< SharedCoordinate > & _coordinates ;
 	};
 
-
-}//transform
-}//SFCGAL
-
+} // namespace detail
+} // namespace SFCGAL
 
 
 

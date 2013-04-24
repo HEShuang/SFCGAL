@@ -210,6 +210,20 @@ namespace SFCGAL {
 		inline const Coordinate & coordinate() const { return *_coordinate; }
 
 		/**
+		 * @brief Get shared coordinates
+		 */
+		inline SharedCoordinate   sharedCoordinate() const {
+			return _coordinate ;
+		}
+		/**
+		 * @brief Set shared coordinates (keeps M if defined)
+		 */
+		inline void setSharedCoordinate( SharedCoordinate sharedCoordinate ) {
+			BOOST_ASSERT( sharedCoordinate.get() != NULL ) ;
+			_coordinate = sharedCoordinate ;
+		}
+
+		/**
 		 * Serializer
 		 */
 		template <class Archive>

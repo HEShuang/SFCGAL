@@ -85,6 +85,14 @@ namespace SFCGAL {
 		 */
 		bool is3D() const ;
 
+	   /**
+		* @brief returns the WKT string
+		*
+		* BBOX(<xmin> <ymin>,<xmax> <ymax>) OR BBOX(<xmin> <ymin> <zmin>,<xmax> <ymax> <zmax>)
+		* @param numDecimals extension specify fix precision output
+		*/
+	   std::string          asText( const int & numDecimals = -1 ) const ;
+
 		/**
 		 * expand the box to include coordinate
 		 */
@@ -98,7 +106,6 @@ namespace SFCGAL {
 		inline const double& xMax() const { return _bounds[0].upper(); }
 		inline const double& yMax() const { return _bounds[1].upper(); }
 		inline const double& zMax() const { return _bounds[2].upper(); }
-
 
 		/**
 		 * returns the n-th bound

@@ -108,6 +108,21 @@ BOOST_AUTO_TEST_CASE( testExpandToInclude )
 	BOOST_CHECK( box.boundsN(2) == detail::Interval(0.0) );
 }
 
+BOOST_AUTO_TEST_CASE( testAsText_empty )
+{
+	Envelope box;
+	BOOST_CHECK_EQUAL( box.asText(), "" );
+}
+BOOST_AUTO_TEST_CASE( testAsTexte_2d )
+{
+	Envelope box(Coordinate(0,1),Coordinate(2,3));
+	BOOST_CHECK_EQUAL( box.asText(1), "BOX(0.0 1.0,2.0 3.0)");
+}
+BOOST_AUTO_TEST_CASE( testAsTexte_3d )
+{
+	Envelope box(Coordinate(0,1,2),Coordinate(3,4,5));
+	BOOST_CHECK_EQUAL( box.asText(1), "BOX3D(0.0 1.0 2.0,3.0 4.0 5.0)");
+}
 
 BOOST_AUTO_TEST_SUITE_END()
 

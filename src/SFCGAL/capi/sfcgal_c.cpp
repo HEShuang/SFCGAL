@@ -756,7 +756,7 @@ extern "C" sfcgal_geometry_t* sfcgal_geometry_round( const sfcgal_geometry_t* ga
 	SFCGAL::transform::RoundTransform roundT( scale );
 	try
 	{
-		gb->accept( roundT );
+		gb->transform( roundT );
 	}
 	catch ( std::exception& e )
 	{

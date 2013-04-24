@@ -31,15 +31,15 @@ namespace SFCGAL {
 namespace algorithm {
 
 	/**
-	 * Make valid 2D orientation
+	 * @brief Make valid 2D orientation
 	 */
     void makeValidOrientation( CGAL::Polygon_2< Kernel > & polygon ) ;
 	/**
-	 * Make valid 2D orientation
+	 * @brief Make valid 2D orientation
 	 */
     void makeValidOrientation( CGAL::Polygon_with_holes_2< Kernel > & polygon ) ;
 	/**
-	 * Make valid 2D orientation
+	 * @brief Make valid 2D orientation
 	 */
     void makeValidOrientation( Polygon & polygon ) ;
 

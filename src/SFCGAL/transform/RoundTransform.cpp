@@ -37,9 +37,9 @@ RoundTransform::RoundTransform( const long & scale ):
 ///
 ///
 ///
-void RoundTransform::transform( Point & p )
+void RoundTransform::transform( Coordinate & c )
 {
-	p.coordinate().round( _scale ) ;
+	c.round( _scale ) ;
 }
 
 }//transform

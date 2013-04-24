@@ -38,13 +38,13 @@ using namespace SFCGAL ;
 class RotateCoordinate : public Transform {
 public:
 
-	virtual void transform( Point & p )
+	virtual void transform( Coordinate & c )
 	{
-		BOOST_ASSERT( ! p.isEmpty() );
-		p = Point(
-			p.is3D() ? p.z() : 0.0,
-			p.x(),
-			p.y()
+		BOOST_ASSERT( ! c.isEmpty() );
+		c = Coordinate(
+			c.is3D() ? c.z() : 0.0,
+			c.x(),
+			c.y()
 		);
 	}
 
@@ -86,7 +86,7 @@ BOOST_AUTO_TEST_CASE( testComputeArea )
 		BOOST_TEST_MESSAGE( boost::format("area( '%1%' ) = %2%") % inputWkt % area );
 
 		RotateCoordinate rotateCoordinate ;
-		g->accept(rotateCoordinate);
+		g->transform(rotateCoordinate);
 		double areaRotate = algorithm::area3D( *g ) ;
 
 		//check area == areaRotate

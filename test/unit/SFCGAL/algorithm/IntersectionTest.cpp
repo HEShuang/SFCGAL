@@ -239,56 +239,63 @@ BOOST_AUTO_TEST_CASE( testIntersectionSolid )
     // triangle x cube
     //
     {
-	// A triangle partly inside
+    	// A triangle partly inside
 	    Triangle tri1(Point(-0.5, 0.5, 0), Point(0.5, 0.5, 0.5), Point(-0.5, 0.5, 1));
 	    BOOST_CHECK( *(algorithm::intersection3D( tri1, *cube )) == *(io::readWkt("POLYGON((0 0.5 0.75,0.5 0.5 0.5,0 0.5 0.25,0 0.5 0.5,0 0.5 0.75))")) );
-	// A triangle completely inside
-	Triangle tri2(Point(0.2, 0.2, 0.2), Point(0.8, 0.2, 0.2), Point(0.8, 0.2, 0.8));
-	BOOST_CHECK( *(algorithm::intersection3D(tri2, *cube)) == tri2 );
-	// A triangle completely outside
-	Triangle tri3(Point(-0.5, 1.5, 0), Point(0.5, 1.5, 0.5), Point(-0.5, 1.5, 1));
-	BOOST_CHECK( algorithm::intersection3D(tri3, *cube)->isEmpty());
-	
-	// A triangle partly touching a face
-	Triangle tri3b(Point(-0.5, 0.0, 0.0), Point(1.5, 0.0, 0.0), Point(0.0, 1.0, 0.0));
-	BOOST_CHECK( algorithm::intersection3D( tri3b, *cube )->geometryTypeId() == TYPE_POLYGON );
-	
-	// A triangle touching a face
-	Triangle tri4(Point(0.0, 0.0, 0.0), Point(1.0, 0.0, 0.0), Point(0.0, 1.0, 0.0));
-	BOOST_CHECK( algorithm::intersection3D( tri4, *cube )->envelope() == Envelope( Coordinate(0, 0, 0), Coordinate(1, 1, 0)) );
-	
-	// A triangle touching an edge
-	Triangle tri5(Point(0.0, 0.0, 0.0), Point(0.0, 1.0, 0.0), Point(-1.0, 0.0, 0.0));
-	BOOST_CHECK( *algorithm::intersection3D( tri5, *cube ) == LineString(Point(0, 0, 0), Point(0, 1, 0)) );
-	
-	// A triangle touching a vertex
-	Triangle tri6(Point(0.0, 0.0, 0.0), Point(-1.0, 1.0, 0.0), Point(-1.0, 0.0, 0.0));
-	BOOST_CHECK( *algorithm::intersection3D( tri6, *cube ) == Point(0, 0, 0) );
+		// A triangle completely inside
+		Triangle tri2(Point(0.2, 0.2, 0.2), Point(0.8, 0.2, 0.2), Point(0.8, 0.2, 0.8));
+		BOOST_CHECK( *(algorithm::intersection3D(tri2, *cube)) == tri2 );
+		// A triangle completely outside
+		Triangle tri3(Point(-0.5, 1.5, 0), Point(0.5, 1.5, 0.5), Point(-0.5, 1.5, 1));
+		BOOST_CHECK( algorithm::intersection3D(tri3, *cube)->isEmpty());
+
+		// A triangle partly touching a face
+		Triangle tri3b(Point(-0.5, 0.0, 0.0), Point(1.5, 0.0, 0.0), Point(0.0, 1.0, 0.0));
+		BOOST_CHECK( algorithm::intersection3D( tri3b, *cube )->geometryTypeId() == TYPE_POLYGON );
+
+		// A triangle touching a face
+		Triangle tri4(Point(0.0, 0.0, 0.0), Point(1.0, 0.0, 0.0), Point(0.0, 1.0, 0.0));
+		BOOST_CHECK( algorithm::intersection3D( tri4, *cube )->envelope() == Envelope( Coordinate(0, 0, 0), Coordinate(1, 1, 0)) );
+
+		// A triangle touching an edge
+		Triangle tri5(Point(0.0, 0.0, 0.0), Point(0.0, 1.0, 0.0), Point(-1.0, 0.0, 0.0));
+		BOOST_CHECK( *algorithm::intersection3D( tri5, *cube ) == LineString(Point(0, 0, 0), Point(0, 1, 0)) );
+
+		// A triangle touching a vertex
+		Triangle tri6(Point(0.0, 0.0, 0.0), Point(-1.0, 1.0, 0.0), Point(-1.0, 0.0, 0.0));
+		BOOST_CHECK( *algorithm::intersection3D( tri6, *cube ) == Point(0, 0, 0) );
     }
 
     // Polygon x Solid
     {
-	// special case : when the intersection is a multipoint or a multilinestring
-	// multi triangles ??
-	std::auto_ptr<Geometry> polygon1 = io::readWkt("POLYGON((0.2 0.5 0, 0.2 0.5 -1, 0.8 0.5 -1, 0.8 0.5 0, 0.5 0.5 -0.5, 0.2 0.5 0))");
+		// special case : when the intersection is a multipoint or a multilinestring
+		// multi triangles ??
+		std::auto_ptr<Geometry> polygon1 = io::readWkt("POLYGON((0.2 0.5 0, 0.2 0.5 -1, 0.8 0.5 -1, 0.8 0.5 0, 0.5 0.5 -0.5, 0.2 0.5 0))");
 
-	std::auto_ptr<Geometry> inter = algorithm::intersection3D( *polygon1, *cube );
-	BOOST_CHECK( *inter == *io::readWkt("GEOMETRYCOLLECTION(POINT(0.8 0.5 0),POINT(0.2 0.5 0))"));
+		std::auto_ptr<Geometry> inter = algorithm::intersection3D( *polygon1, *cube );
+		BOOST_CHECK( *inter == *io::readWkt("GEOMETRYCOLLECTION(POINT(0.8 0.5 0),POINT(0.2 0.5 0))"));
     }
 
     // Solid x Solid
     {
-	Solid solidb( static_cast<Solid&>(*cube));
+    	std::auto_ptr< Geometry > solidb( io::readWkt( cubestr ) ) ;
 
-	CGAL::Vector_3<Kernel> tv( CGAL::Point_3<Kernel>( 0.0, 0.0, 0.0 ),
-				   CGAL::Point_3<Kernel>( 0.5, 0.0, 0.0 ));
-	transform::AffineTransform3<Kernel> t( CGAL::Aff_transformation_3<Kernel>( CGAL::Translation(),
-										    tv ));
-	t.transform( solidb );
+		CGAL::Vector_3<Kernel> tv(
+			CGAL::Point_3<Kernel>( 0.0, 0.0, 0.0 ),
+			CGAL::Point_3<Kernel>( 0.5, 0.0, 0.0 )
+		);
+		transform::AffineTransform3<Kernel> t(
+			CGAL::Aff_transformation_3<Kernel>(
+				CGAL::Translation(),
+				tv
+			)
+		);
+		solidb->transform( t );
 
-	// Another solid crossing
-	std::auto_ptr<Geometry> inter = algorithm::intersection3D( solidb, *cube );
-	BOOST_CHECK( inter->envelope() ==  Envelope( Coordinate( 0.5, 0, 0 ), Coordinate( 1.0, 1.0, 1.0)));
+		// Another solid crossing
+		std::auto_ptr<Geometry> inter = algorithm::intersection3D( *solidb, *cube );
+		BOOST_CHECK( ! inter->isEmpty() );
+		BOOST_CHECK( inter->envelope() ==  Envelope( Coordinate( 0.5, 0, 0 ), Coordinate( 1.0, 1.0, 1.0)));
     }
 }
 

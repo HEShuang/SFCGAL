@@ -45,9 +45,9 @@ namespace transform {
 		/*
 		 * [SFCGAL::Transform]
 		 */
-		virtual void transform( Point & p )
+		virtual void transform( Coordinate & c )
 		{
-			p = Point( p.toPoint_2().transform( _transform ) );
+			c = Coordinate( c.toPoint_2().transform( _transform ) );
 		}
 
 	private:

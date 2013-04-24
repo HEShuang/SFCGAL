@@ -22,7 +22,7 @@
 #define _SFCGAL_TRANSFORM_FORCEZ_ORDER_POINTS_H_
 
 #include <SFCGAL/Kernel.h>
-#include <SFCGAL/Transform.h>
+#include <SFCGAL/PointVisitor.h>
 
 namespace SFCGAL {
 
@@ -30,8 +30,9 @@ namespace transform {
 
 	/**
 	 * Force Z. If the 2D surface is pointing down, reverse its points
+	 * @todo move (not a coordinate transform)
 	 */
-	class ForceZOrderPoints : public Transform {
+	class ForceZOrderPoints : public PointVisitor {
 	public:
 		/**
 		 * Constructor with a default Z value
@@ -41,8 +42,7 @@ namespace transform {
 		/*
 		 * [SFCGAL::Transform]
 		 */
-		virtual void transform( Point & p ) ;
-
+		virtual void visit( Point & p ) ;
 		virtual void visit( Triangle& );
 		virtual void visit( Polygon& );
 
