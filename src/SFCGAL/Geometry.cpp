@@ -31,6 +31,7 @@
 
 #include <SFCGAL/detail/EnvelopeVisitor.h>
 #include <SFCGAL/detail/GetCoordinatesVisitor.h>
+#include <SFCGAL/detail/MakeSharedVisitor.h>
 
 #include <SFCGAL/transform/RoundTransform.h>
 
@@ -201,6 +202,15 @@ void Geometry::transform( Transform & t )
 	for ( std::set< SharedCoordinate >::iterator it = coordinates.begin(); it != coordinates.end(); ++it ){
 		t.transform( **it ) ;
 	}
+}
+
+///
+///
+///
+void Geometry::makeSharedCoordinates()
+{
+	detail::MakeSharedVisitor visitor ;
+	accept( visitor ) ;
 }
 
 

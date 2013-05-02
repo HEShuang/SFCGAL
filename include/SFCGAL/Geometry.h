@@ -273,6 +273,11 @@ namespace SFCGAL {
        virtual void accept( ConstGeometryVisitor & visitor ) const = 0 ;
 
        /**
+        * @brief reset shared coordinate (free sharing with other geometries and rebuild it in child geometries)
+        */
+       void makeSharedCoordinates() ;
+
+       /**
         * Serializer
         */
        template <class Archive>
