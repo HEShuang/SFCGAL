@@ -31,6 +31,8 @@ target_link_libraries( viewer-SFCGAL
 	${GMP_LIBRARIES}
 	# Postgresql
 	pq
+	QtGui
+	QtCore
 )
 install( TARGETS viewer-SFCGAL DESTINATION bin )
 

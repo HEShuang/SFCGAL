@@ -27,7 +27,7 @@ if( ${SFCGAL_WITH_OSG} )
 	 target_link_libraries( SFCGAL ${OPENSCENEGRAPH_LIBRARIES} )
 endif()
 
-target_link_libraries( SFCGAL ${Boost_LIBRARIES} )
+target_link_libraries( SFCGAL ${Boost_LIBRARIES} ${CGAL_LIBRARIES} )
 
 if ( ${Use_precompiled_headers} )
   if(PCHSupport_FOUND)
